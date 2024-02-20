@@ -1,10 +1,19 @@
-import { createStore, combineReducers } from "redux";
 import letters from "../modules/letters";
 import member from "../modules/member";
-import { devToolsEnhancer } from "redux-devtools-extension";
+import { configureStore } from "@reduxjs/toolkit";
 
-const rootReducer = combineReducers({ letters, member });
+// ASIS : 일반 리듀서
+// const rootReducer = combineReducers({ letters, member });
 
-const store = createStore(rootReducer, devToolsEnhancer());
+// const store = createStore(rootReducer, devToolsEnhancer());
+
+// TODO: Redux Toolkit
+const store = configureStore({
+    //reducer가 들어감
+    reducer: {
+        letters: letters,
+        member: member
+    }
+});
 
 export default store;
