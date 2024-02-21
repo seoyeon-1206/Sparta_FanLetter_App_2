@@ -3,21 +3,20 @@ import { useDispatch } from 'react-redux';
 import { toggleLoginState } from '../redux/modules/authSlice';
 import styled, { css } from 'styled-components'
 import { toast } from 'react-toastify';
+import useForm from 'hooks/useForm';
 
 const Login = () => {
     const dispatch = useDispatch();
     const [isLoginMode, setIsLoginMode] = useState(true);
-    const initialState = {
-        id: '', password: '', nickname: ''
-    }
-    const [formState, setFormState] = useState(initialState);
+    // const [formState, setFormState] = useState(initialState);
+    const { formState, onChangeHandler, resetForm } = useForm({ id: '', password: '', nickname: '' })
     const { id, password, nickname } = formState;
     console.log(id, password, nickname)
 
-    const onChangeHandler = (event) => {
-        const { name, value } = event.target;
-        setFormState(prev => ({ ...prev, [name]: value }))
-    }
+    // const onChangeHandler = (event) => {
+    //     const { name, value } = event.target;
+    //     setFormState(prev => ({ ...prev, [name]: value }))
+    // }
 
     const isRegisterButtonDisabled = () => {
         return isLoginMode ? id.trim() === '' || password.trim() === '' : id.trim() === '' || password.trim() === '' || nickname.trim() === '';
@@ -29,12 +28,12 @@ const Login = () => {
         if (isLoginMode) {
             //로그인 모드 처리
             dispatch(toggleLoginState());
-            toast.success("로그인 성공")
+            toast.success("로그인 성공");
         } else {
             //회원가입 처리 
             setIsLoginMode(true);
-            setFormState(initialState)
-            toast.success("회원가입 성공")
+            resetForm();
+            toast.success("회원가입 성공");
         }
     }
 
