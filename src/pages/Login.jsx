@@ -4,36 +4,47 @@ import { toggleLoginState } from '../redux/modules/authSlice';
 import styled, { css } from 'styled-components'
 import { toast } from 'react-toastify';
 import useForm from 'hooks/useForm';
+import axios from 'axios';
 
 const Login = () => {
     const dispatch = useDispatch();
     const [isLoginMode, setIsLoginMode] = useState(true);
-    // const [formState, setFormState] = useState(initialState);
     const { formState, onChangeHandler, resetForm } = useForm({ id: '', password: '', nickname: '' })
     const { id, password, nickname } = formState;
     console.log(id, password, nickname)
-
-    // const onChangeHandler = (event) => {
-    //     const { name, value } = event.target;
-    //     setFormState(prev => ({ ...prev, [name]: value }))
-    // }
 
     const isRegisterButtonDisabled = () => {
         return isLoginMode ? id.trim() === '' || password.trim() === '' : id.trim() === '' || password.trim() === '' || nickname.trim() === '';
     }
 
     // 로그인, 회원가입 제출 버튼
-    const onSubmitHandler = (event) => {
+    const onSubmitHandler = async (event) => {
         event.preventDefault(); //submit이라서
         if (isLoginMode) {
             //로그인 모드 처리
             dispatch(toggleLoginState());
             toast.success("로그인 성공");
         } else {
-            //회원가입 처리 
-            setIsLoginMode(true);
-            resetForm();
-            toast.success("회원가입 성공");
+            try {
+                const { data } = await axios.post(
+                    "https://moneyfulpublicpolicy.co.kr/register",
+                    {
+                        id,
+                        password,
+                        nickname,
+                    }
+                );
+
+                if (data.success) {
+                    setIsLoginMode(true);
+                    resetForm();
+                    toast.success("회원가입 성공");
+                }
+
+            } catch (error) {
+                toast.error(error.response.data.message)
+            }
+
         }
     }
 
