@@ -1,40 +1,37 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import styled from 'styled-components'
-import { registorUser } from 'actions/authActions';
-import { toggleLoginState } from '../redux/modules/authSlice';
+import styled, { css } from 'styled-components'
 
 const Login = () => {
-    const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
-    const dispatch = useDispatch();
-
-    const [userData, setUserData] = useState({
-        id: '',
-        password: '',
-        nickname: '',
-    })
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setUserData({ ...userData, [name]: value });
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        dispatch(registorUser(userData));
-        if (!isLoggedIn) {
-            dispatch(toggleLoginState());
-        }
-    };
-
-    const toggleForm = () => {
-        dispatch(toggleLoginState());
+    const [isLoginMode, setIsLoginMode] = useState(true);
+    const [formState, setFormState] = useState({
+        id: '', password: '', nickname: ''
+    });
+    const { id, password, nickname } = formState;
+    console.log(id, password, nickname)
+    const onChangeHandler = (event) => {
+        const { name, value } = event.target;
+        setFormState(prev => ({ ...prev, [name]: value }))
     }
+
+    const isRegisterButtonDisabled = () => {
+        return isLoginMode ? id.trim() === '' || password.trim() === '' : id.trim() === '' || password.trim() === '' || nickname.trim() === '';
+    }
+
+    // 로그인, 회원가입 제출 버튼
+    const onSubmitHandler = (event) => {
+        event.preventDefault(); //submit이라서
+        if (isLoginMode) {
+            //로그인 모드 처리
+        } else {
+            //회원가입 처리 
+        }
+    }
+
     return (
         <>
             <LoginWrapper>
-                <LoginForm onSubmit={handleSubmit}>
-                    <PageTitle>{isLoggedIn ? '로그인' : '회원가입'}</PageTitle>
+                <LoginForm onSubmit={onSubmitHandler}>
+                    <PageTitle>{isLoginMode ? '로그인' : '회원가입'}</PageTitle>
                     <InputWrapper>
                         <input
                             type='text'
@@ -42,8 +39,8 @@ const Login = () => {
                             placeholder='아이디 (4~10글자)'
                             minLength="4"
                             maxLength="10"
-                            value={userData.id}
-                            onChange={handleChange}>
+                            value={id}
+                            onChange={onChangeHandler}>
                         </input>
                     </InputWrapper>
                     <InputWrapper>
@@ -53,11 +50,11 @@ const Login = () => {
                             placeholder='비밀번호 (4~15글자)'
                             minLength="4"
                             maxLength="15"
-                            value={userData.password}
-                            onChange={handleChange}>
+                            value={password}
+                            onChange={onChangeHandler}>
                         </input>
                     </InputWrapper>
-                    {!isLoggedIn && (
+                    {!isLoginMode && (
                         <InputWrapper>
                             <input
                                 type='text'
@@ -65,16 +62,16 @@ const Login = () => {
                                 placeholder='닉네임 (1~10글자)'
                                 minLength="1"
                                 maxLength="10"
-                                value={userData.nickname}
-                                onChange={handleChange}>
+                                value={nickname}
+                                onChange={onChangeHandler}>
                             </input>
                         </InputWrapper>
                     )}
                     <TopBtn>
-                        <button type='submit'>{isLoggedIn ? '로그인' : '회원가입'} </button>
+                        <button disabled={isRegisterButtonDisabled()} type='submit'>{isLoginMode ? '로그인' : '회원가입'} </button>
                     </TopBtn>
                     <BottomBtn>
-                        <span onClick={toggleForm}>{isLoggedIn ? '회원가입' : '로그인'}</span>
+                        <span onClick={() => { setIsLoginMode(prev => !prev) }}>{isLoginMode ? '회원가입' : '로그인'}</span>
                     </BottomBtn>
                 </LoginForm>
             </LoginWrapper>
@@ -126,13 +123,18 @@ const TopBtn = styled.div`
     align-items: center;
 
     & button {
-    background-color: lightgray;
+        background-color: black;
     color: white;
     cursor: pointer;
     width: 100%;
     font-size: 20px;
     padding: 24px 36px;
     border: none;
+
+    &:disabled {
+        background-color: lightgray;
+    }
+
     }
 `
 const BottomBtn = styled.form`
