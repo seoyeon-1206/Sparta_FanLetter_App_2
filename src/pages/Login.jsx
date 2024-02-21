@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux';
-import { toggleLoginState } from '../redux/modules/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { login, toggleLoginState } from '../redux/modules/authSlice';
 import styled, { css } from 'styled-components'
 import { toast } from 'react-toastify';
 import useForm from 'hooks/useForm';
@@ -21,9 +21,21 @@ const Login = () => {
     const onSubmitHandler = async (event) => {
         event.preventDefault(); //submit이라서
         if (isLoginMode) {
-            //로그인 모드 처리
-            dispatch(toggleLoginState());
-            toast.success("로그인 성공");
+            try {
+                const { data } = await axios.post(
+                    "https://moneyfulpublicpolicy.co.kr/login",
+                    {
+                        id,
+                        password,
+                    }
+                );
+                if (data.success) {
+                    dispatch(login())
+                    toast.success("로그인 성공");
+                }
+            } catch (error) {
+                toast.error(error.response.data.message)
+            }
         } else {
             try {
                 const { data } = await axios.post(
@@ -34,17 +46,15 @@ const Login = () => {
                         nickname,
                     }
                 );
-
                 if (data.success) {
                     setIsLoginMode(true);
                     resetForm();
                     toast.success("회원가입 성공");
                 }
-
             } catch (error) {
-                toast.error(error.response.data.message)
+                toast.error(error.response.data.message);
+                resetForm();
             }
-
         }
     }
 

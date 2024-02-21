@@ -7,21 +7,22 @@ const initialState = {
         nickname: null,
         accessToken: null
     },
-    isLoggedIn: false,
+    isLogin: false,
 }
 
 const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        updateUserData: (state, action) => {
-            return { ...state, users: action.payload };
+        login: (state, action) => {
+            state.isLogin = true;
         },
-        toggleLoginState: (state) => {
-            state.isLoggedIn = !state.isLoggedIn;
+        logout: (state, aciton) => {
+            state.isLogin = false;
         }
+
     }
 })
 
-export const { updateUserData, toggleLoginState } = authSlice.actions;
+export const { updateUserData, login, logout } = authSlice.actions;
 export default authSlice.reducer;
