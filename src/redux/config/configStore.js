@@ -1,3 +1,4 @@
+import authSlice from "../modules/authSlice";
 import letters from "../modules/letters";
 import member from "../modules/member";
 import { configureStore } from "@reduxjs/toolkit";
@@ -12,7 +13,8 @@ const store = configureStore({
     //reducer가 들어감
     reducer: {
         letters: letters,
-        member: member
+        member: member,
+        auth: authSlice
     }
 });
 

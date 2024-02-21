@@ -1,34 +1,80 @@
-import React, { useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components'
+import { registorUser } from 'actions/authActions';
+import { toggleLoginState } from '../redux/modules/authSlice';
 
 const Login = () => {
-    const [isLoginForm, setIsLoginForm] = useState(true);
+    const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+    const dispatch = useDispatch();
+
+    const [userData, setUserData] = useState({
+        id: '',
+        password: '',
+        nickname: '',
+    })
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setUserData({ ...userData, [name]: value });
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        dispatch(registorUser(userData));
+        if (!isLoggedIn) {
+            dispatch(toggleLoginState());
+        }
+    };
 
     const toggleForm = () => {
-        setIsLoginForm(!isLoginForm)
+        dispatch(toggleLoginState());
     }
     return (
         <>
             <LoginWrapper>
-                <LoginForm>
-                    <PageTitle>{isLoginForm ? '로그인' : '회원가입'}</PageTitle>
+                <LoginForm onSubmit={handleSubmit}>
+                    <PageTitle>{isLoggedIn ? '로그인' : '회원가입'}</PageTitle>
                     <InputWrapper>
-                        <input name='id' placeholder='아이디 (4~10글자)' minLength="4" maxLength="10"></input>
+                        <input
+                            type='text'
+                            name='id'
+                            placeholder='아이디 (4~10글자)'
+                            minLength="4"
+                            maxLength="10"
+                            value={userData.id}
+                            onChange={handleChange}>
+                        </input>
                     </InputWrapper>
                     <InputWrapper>
-                        <input name='password' placeholder='비밀번호 (4~15글자)' minLength="4" maxLength="15"></input>
+                        <input
+                            type='password'
+                            name='password'
+                            placeholder='비밀번호 (4~15글자)'
+                            minLength="4"
+                            maxLength="15"
+                            value={userData.password}
+                            onChange={handleChange}>
+                        </input>
                     </InputWrapper>
-                    {!isLoginForm && (
+                    {!isLoggedIn && (
                         <InputWrapper>
-                            <input name='nickname' placeholder='닉네임 (1~10글자)' minLength="1" maxLength="10"></input>
+                            <input
+                                type='text'
+                                name='nickname'
+                                placeholder='닉네임 (1~10글자)'
+                                minLength="1"
+                                maxLength="10"
+                                value={userData.nickname}
+                                onChange={handleChange}>
+                            </input>
                         </InputWrapper>
                     )}
                     <TopBtn>
-                        <button>{isLoginForm ? '로그인' : '회원가입'} </button>
+                        <button type='submit'>{isLoggedIn ? '로그인' : '회원가입'} </button>
                     </TopBtn>
                     <BottomBtn>
-                        <span onClick={toggleForm}>{isLoginForm ? '회원가입' : '로그인'}</span>
+                        <span onClick={toggleForm}>{isLoggedIn ? '회원가입' : '로그인'}</span>
                     </BottomBtn>
                 </LoginForm>
             </LoginWrapper>
