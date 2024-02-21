@@ -30,7 +30,7 @@ const Login = () => {
                     }
                 );
                 if (data.success) {
-                    dispatch(login())
+                    dispatch(login(data.accessToken))
                     toast.success("로그인 성공");
                 }
             } catch (error) {

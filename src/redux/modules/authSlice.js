@@ -7,7 +7,7 @@ const initialState = {
         nickname: null,
         accessToken: null
     },
-    isLogin: false,
+    isLogin: false
 }
 
 const authSlice = createSlice({
@@ -15,10 +15,13 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         login: (state, action) => {
+            const accessToken = action.payload;
+            localStorage.setItem("accessToken", accessToken);
             state.isLogin = true;
         },
         logout: (state, aciton) => {
             state.isLogin = false;
+            localStorage.clear();
         }
 
     }
