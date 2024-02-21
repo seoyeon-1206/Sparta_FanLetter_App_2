@@ -6,11 +6,13 @@ import styled, { css } from 'styled-components'
 const Login = () => {
     const dispatch = useDispatch();
     const [isLoginMode, setIsLoginMode] = useState(true);
-    const [formState, setFormState] = useState({
+    const initialState = {
         id: '', password: '', nickname: ''
-    });
+    }
+    const [formState, setFormState] = useState(initialState);
     const { id, password, nickname } = formState;
     console.log(id, password, nickname)
+
     const onChangeHandler = (event) => {
         const { name, value } = event.target;
         setFormState(prev => ({ ...prev, [name]: value }))
@@ -29,7 +31,8 @@ const Login = () => {
             alert('로그인 성공')
         } else {
             //회원가입 처리 
-            dispatch(toggleLoginState());
+            setIsLoginMode(true);
+            setFormState(initialState)
             alert('회원가입 성공')
         }
     }
