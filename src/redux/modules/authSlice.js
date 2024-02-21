@@ -7,7 +7,7 @@ const initialState = {
         nickname: null,
         accessToken: null
     },
-    isLogin: false
+    isLogin: !!localStorage.getItem("accessToken"), //!! Boolean 타입으로 강제 변환 시키는 연산자, localStorage 안에 문자열이 있으면 true 아니면 false
 }
 
 const authSlice = createSlice({
