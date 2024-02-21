@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { login } from '../redux/modules/authSlice';
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { toast } from 'react-toastify';
 import useForm from 'hooks/useForm';
 import { authApi } from 'api';
