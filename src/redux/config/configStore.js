@@ -1,4 +1,4 @@
-import authSlice from "../modules/authSlice";
+import auth from "../modules/authSlice";
 import letters from "../modules/letters";
 import member from "../modules/member";
 import { configureStore } from "@reduxjs/toolkit";
@@ -14,7 +14,7 @@ const store = configureStore({
     reducer: {
         letters: letters,
         member: member,
-        auth: authSlice
+        auth,
     }
 });
 

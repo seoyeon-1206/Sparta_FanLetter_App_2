@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux';
+import { toggleLoginState } from '../redux/modules/authSlice';
 import styled, { css } from 'styled-components'
 
 const Login = () => {
+    const dispatch = useDispatch();
     const [isLoginMode, setIsLoginMode] = useState(true);
     const [formState, setFormState] = useState({
         id: '', password: '', nickname: ''
@@ -22,8 +25,12 @@ const Login = () => {
         event.preventDefault(); //submit이라서
         if (isLoginMode) {
             //로그인 모드 처리
+            dispatch(toggleLoginState());
+            alert('로그인 성공')
         } else {
             //회원가입 처리 
+            dispatch(toggleLoginState());
+            alert('회원가입 성공')
         }
     }
 
@@ -134,7 +141,6 @@ const TopBtn = styled.div`
     &:disabled {
         background-color: lightgray;
     }
-
     }
 `
 const BottomBtn = styled.form`
