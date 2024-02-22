@@ -13,6 +13,19 @@ const initialState = {
     error: null
 }
 
+export const __editProfile = createAsyncThunk("editProfile", async (formData, thunkAPI) => {
+    try {
+        const { data } = await authApi.patch("/profile", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        })
+        return data;
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error);
+    }
+})
+
 export const __login = createAsyncThunk("login", async ({ id, password }, thunkAPI) => {
     try {
         const { data } = await authApi.post("/login?expiresIn=10m", {
@@ -72,6 +85,27 @@ const authSlice = createSlice({
                 state.isLoading = false
             })
             .addCase(__login.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.error = action.payload
+            })
+            .addCase(__editProfile.pending, (state, action) => {
+                state.isLoading = true;
+
+            })
+            .addCase(__editProfile.fulfilled, (state, action) => {
+                const { avatar, nickname } = action.payload;
+                if (avatar) {
+                    localStorage.setItem("avatar", avatar);
+                    state.avatar = avatar;
+                }
+                if (nickname) {
+                    localStorage.setItem("nickname", nickname);
+                    state.nickname = nickname;
+                }
+                state.isLoading = false;
+            })
+            .addCase(__editProfile.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.error = action.payload
