@@ -38,7 +38,6 @@ const Profile = () => {
         }
         dispatch(__editProfile(formData))
         setIsEditing(false);
-        toast.success("프로필 수정이 완료 되었습니다!")
     }
 
     return (
