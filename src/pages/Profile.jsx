@@ -37,7 +37,7 @@ const Profile = () => {
                 <UserId>{userId}</UserId>
                 {isEditing ? (<div>
                     <Button text='취소' onClick={() => setIsEditing(false)} />
-                    <Button text='수정완료' />
+                    <Button text='수정완료' disabled={!editingText && selectedImg === avatar} />
                 </div>
                 ) : (
                     <Button text='수정하기' onClick={() => setIsEditing(true)} />
