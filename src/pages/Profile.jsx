@@ -16,7 +16,8 @@ const Profile = () => {
             <ProfileWrapper>
                 <h1>프로필 관리</h1>
                 <Avatar size="large" src={avatar} />
-                <Nickname>{nickname}</Nickname>
+                {isEditing ? <input autoFocus defaultValue={nickname} onChange={(e) => setEditingText(e.target.value)} /> :
+                    <Nickname>{nickname}</Nickname>}
                 <UserId>{userId}</UserId>
                 {isEditing ? (<div>
                     <Button text='취소' onClick={() => setIsEditing(false)} />
@@ -52,9 +53,14 @@ const ProfileWrapper = styled.section`
         font-size: 36px;
         font-weight: 700;
     }
-    & div{
+    & div {
         display: flex;
         gap: 24px;
+        padding: 6px 12px;
+    }
+    & input {
+        height: 24px;
+        outline: none;
     }
 `
 const Nickname = styled.span`
