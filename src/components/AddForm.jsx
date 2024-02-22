@@ -3,13 +3,13 @@ import styled from "styled-components";
 import { v4 as uuid } from "uuid";
 import Button from "./common/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { addLetter } from "../redux/modules/letters";
+import { __addLetter, addLetter } from "../redux/modules/letters";
 
 export default function AddForm() {
   // const { setLetters } = useContext(LetterContext);
   const dispatch = useDispatch();
 
-  const { avatar, nickname } = useSelector(state => state.auth)
+  const { avatar, nickname, userId } = useSelector(state => state.auth)
 
   // const [nickname, setNickname] = useState("");
   const [content, setContent] = useState("");
@@ -26,9 +26,10 @@ export default function AddForm() {
       avatar,
       writedTo: member,
       createdAt: new Date(),
+      userId
     };
 
-    dispatch(addLetter(newLetter));
+    dispatch(__addLetter(newLetter));
     setContent("");
   };
 

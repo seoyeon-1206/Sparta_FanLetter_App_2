@@ -1,3 +1,13 @@
 {
-  "letters": []
+  "letters": [
+    {
+      "id": "780ce8fa-c17d-408f-89fa-484269bd2cf6",
+      "nickname": "서연",
+      "content": "안녕",
+      "avatar": "null",
+      "writedTo": "카리나",
+      "createdAt": "2024-02-22T03:18:17.017Z",
+      "userId": "seoyeon"
+    }
+  ]
 }
