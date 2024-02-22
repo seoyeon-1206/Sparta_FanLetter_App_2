@@ -3,12 +3,25 @@ import Avatar from 'components/common/Avatar'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
 
 const Profile = () => {
     const { avatar, nickname, userId } = useSelector(state => state.auth);
 
     const [isEditing, setIsEditing] = useState(false);
     const [editingText, setEditingText] = useState("");
+    const [selectedImg, setSelectedImg] = useState(avatar);
+
+    const previewImg = (event) => {
+        const imgFile = event.target.files[0];
+        if (imgFile.size > 1024 * 1024) { //1mb 이상
+            return toast.warn("최대 1MB까지 업로드 가능합니다.")
+        }
+        //프리뷰 구현
+        // file -> url 형식으로 변환
+        const imgUrl = URL.createObjectURL(imgFile);
+        setSelectedImg(imgUrl)
+    }
 
 
     return (
@@ -16,8 +29,8 @@ const Profile = () => {
             <ProfileWrapper>
                 <h1>프로필 관리</h1>
                 <label>
-                    <Avatar size="large" src={avatar} />
-                    <input type='file' />
+                    <Avatar size="large" src={selectedImg} />
+                    <input type='file' onChange={previewImg} accept="image/*" />
                 </label>
                 {isEditing ? <input autoFocus defaultValue={nickname} onChange={(e) => setEditingText(e.target.value)} /> :
                     <Nickname>{nickname}</Nickname>}
