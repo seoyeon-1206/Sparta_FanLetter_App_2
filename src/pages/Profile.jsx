@@ -15,7 +15,10 @@ const Profile = () => {
         <Container>
             <ProfileWrapper>
                 <h1>프로필 관리</h1>
-                <Avatar size="large" src={avatar} />
+                <label>
+                    <Avatar size="large" src={avatar} />
+                    <input type='file' />
+                </label>
                 {isEditing ? <input autoFocus defaultValue={nickname} onChange={(e) => setEditingText(e.target.value)} /> :
                     <Nickname>{nickname}</Nickname>}
                 <UserId>{userId}</UserId>
@@ -61,6 +64,9 @@ const ProfileWrapper = styled.section`
     & input {
         height: 24px;
         outline: none;
+    }
+    & > label > input {
+        display: none;
     }
 `
 const Nickname = styled.span`
