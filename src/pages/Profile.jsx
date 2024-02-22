@@ -66,7 +66,7 @@ const ProfileWrapper = styled.section`
         outline: none;
     }
     & > label > input {
-        display: none;
+        display: none; //input 안보이게
     }
 `
 const Nickname = styled.span`
