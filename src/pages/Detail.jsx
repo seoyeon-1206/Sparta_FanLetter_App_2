@@ -5,7 +5,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { getFormattedDate } from "util/date";
 import { useSelector, useDispatch } from "react-redux";
-import { __deleteLetter, __getLetters, editLetter } from "../redux/modules/letters";
+import { __deleteLetter, __editLetter, __getLetters } from "../redux/modules/letters";
 
 export default function Detail() {
   const dispatch = useDispatch();
@@ -27,7 +27,7 @@ export default function Detail() {
   const onEditDone = () => {
     if (!editingText) return alert("수정사항이 없습니다.");
 
-    dispatch(editLetter({ id, editingText }));
+    dispatch(__editLetter({ id, editingText }));
     setIsEditing(false);
     setEditingText("");
   };
