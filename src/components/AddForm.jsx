@@ -25,7 +25,7 @@ export default function AddForm() {
       content,
       avatar,
       writedTo: member,
-      createdAt: new Date(),
+      createdAt: Date.now(),
       userId
     };
 

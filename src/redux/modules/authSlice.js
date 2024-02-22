@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { buildQueries } from "@testing-library/react";
-import { authApi } from "api";
+import { authApi, jsonApi } from "api";
+import { json } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const initialState = {
@@ -20,6 +21,16 @@ export const __editProfile = createAsyncThunk("editProfile", async (formData, th
                 "Content-Type": "multipart/form-data"
             }
         })
+        const editingObj = {}
+        const { nickname, avatar } = data
+        if (nickname) editingObj.nickname = nickname
+        if (avatar) editingObj.avatar = avatar
+        //JSON 서버에 내 팬레터들의 닉네임, 아바타 변경
+        const userId = localStorage.getItem('userId')
+        const { data: myLetters } = await jsonApi.get(`/letters?userId=${userId}`)
+        for (const myLetter of myLetters) {
+            await jsonApi.patch(`/letters/${myLetter.id}`, editingObj)
+        }
         return data;
     } catch (error) {
         return thunkAPI.rejectWithValue(error);
@@ -104,6 +115,7 @@ const authSlice = createSlice({
                     state.nickname = nickname;
                 }
                 state.isLoading = false;
+                toast.success("프로필 수정이 완료 되었습니다!")
             })
             .addCase(__editProfile.rejected, (state, action) => {
                 state.isLoading = false
