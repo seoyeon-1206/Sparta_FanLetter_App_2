@@ -2,7 +2,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { logout } from "../redux/modules/authSlice";
 
-let store;
+let store; //이 부분 모르겠당 -> store가 준비 됐을 때 비동기로 import
 import('../redux/config/configStore').then(module => {
     store = module.default();
 })
@@ -35,7 +35,7 @@ authApi.interceptors.request.use(
     }
 )
 
-jsonApi.interceptors.request.use(
+authApi.interceptors.response.use(
     response => {
         return response;
     },

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
-import { login } from '../redux/modules/authSlice';
+import { __login } from '../redux/modules/authSlice';
 import styled from 'styled-components'
 import { toast } from 'react-toastify';
 import useForm from 'hooks/useForm';
@@ -21,20 +21,7 @@ const Login = () => {
     const onSubmitHandler = async (event) => {
         event.preventDefault(); //submit이라서
         if (isLoginMode) {
-            try {
-                const { data } = await authApi.post("/login?expiresIn=10s", {
-                    id,
-                    password,
-                }
-                );
-                const { accessToken, avatar, nickname, userId } = data;
-                if (data.success) {
-                    dispatch(login({ accessToken, avatar, nickname, userId }))
-                    toast.success("로그인 성공");
-                }
-            } catch (error) {
-                toast.error(error.response.data.message)
-            }
+            dispatch(__login({ id, password }))
         } else {
             try {
                 const { data } = await authApi.post("/register", {
