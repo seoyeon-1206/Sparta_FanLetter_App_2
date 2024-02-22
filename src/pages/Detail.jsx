@@ -1,29 +1,27 @@
 import Avatar from "components/common/Avatar";
 import Button from "components/common/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { getFormattedDate } from "util/date";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteLetter, editLetter } from "../redux/modules/letters";
+import { __deleteLetter, __getLetters, editLetter } from "../redux/modules/letters";
 
 export default function Detail() {
   const dispatch = useDispatch();
-  const letters = useSelector((state) => state.letters);
+  const { letters, isLoading } = useSelector((state) => state.letters);
+  const myUserId = useSelector((state) => state.auth.userId);
 
   const [isEditing, setIsEditing] = useState(false);
   const [editingText, setEditingText] = useState("");
   const navigate = useNavigate();
   const { id } = useParams();
-  const { avatar, nickname, createdAt, writedTo, content } = letters.find(
-    (letter) => letter.id === id
-  );
 
   const onDeleteBtn = () => {
     const answer = window.confirm("정말로 삭제하시겠습니까?");
     if (!answer) return;
 
-    dispatch(deleteLetter(id));
+    dispatch(__deleteLetter(id));
     navigate("/");
   };
   const onEditDone = () => {
@@ -33,6 +31,17 @@ export default function Detail() {
     setIsEditing(false);
     setEditingText("");
   };
+
+  useEffect(() => {
+    dispatch(__getLetters())
+  }, [dispatch])
+  if (isLoading) {
+    return <p>로딩중</p>
+  }
+  const { avatar, nickname, createdAt, writedTo, content, userId } =
+    letters.find((letter) => letter.id === id);
+  const isMine = userId === myUserId;
+
   return (
     <Container>
       <Link to="/">
@@ -65,10 +74,12 @@ export default function Detail() {
         ) : (
           <>
             <Content>{content}</Content>
-            <BtnsWrapper>
-              <Button text="수정" onClick={() => setIsEditing(true)} />
-              <Button text="삭제" onClick={onDeleteBtn} />
-            </BtnsWrapper>
+            {isMine && (
+              <BtnsWrapper>
+                <Button text="수정" onClick={() => setIsEditing(true)} />
+                <Button text="삭제" onClick={onDeleteBtn} />
+              </BtnsWrapper>
+            )}
           </>
         )}
       </DetailWrapper>

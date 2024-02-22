@@ -4,7 +4,7 @@ import { jsonApi } from "api";
 // 새로고침시 initialState로
 const initialState = {
   letters: [],
-  isLoading: false,
+  isLoading: true,
   isError: false,
   error: null,
 
@@ -14,6 +14,20 @@ const getLettersFromDB = async () => {
   const { data } = await jsonApi.get('/letters?_sort=id,-views');
   return data;
 }
+
+export const __deleteLetter = createAsyncThunk(
+  "__deleteLetter",
+  async (id, thunkAPI) => {
+    try {
+      await jsonApi.delete(`/letters/${id}`)
+      // db에 있는 최신 데이터 불러오기
+      const letters = await getLettersFromDB();
+      return letters;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+)
 
 export const __getLetters = createAsyncThunk(
   "getLetters",
@@ -37,6 +51,13 @@ export const __addLetter = createAsyncThunk(
     } catch (error) {
       return thunkAPI.rejectWithValue(error); //extra reducer로 전달됌
     }
+  }
+)
+
+export const __updateLetter = createAsyncThunk(
+  "updateLetter",
+  async () => {
+
   }
 )
 
@@ -88,6 +109,20 @@ const lettersSlice = createSlice({
         state.error = null
       })
       .addCase(__getLetters.rejected, (state, aciton) => {
+        state.isLoading = false
+        state.isError = true
+        state.error = aciton.payload //error 전달받음
+      })
+      .addCase(__deleteLetter.pending, (state, aciton) => {
+        state.isLoading = true
+      })
+      .addCase(__deleteLetter.fulfilled, (state, aciton) => {
+        state.isLoading = false;
+        state.letters = aciton.payload; //action.payload = data
+        state.isError = false
+        state.error = null
+      })
+      .addCase(__deleteLetter.rejected, (state, aciton) => {
         state.isLoading = false
         state.isError = true
         state.error = aciton.payload //error 전달받음
