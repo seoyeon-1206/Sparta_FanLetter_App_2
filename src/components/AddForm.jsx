@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { v4 as uuid } from "uuid";
 import Button from "./common/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { __addLetter, addLetter } from "../redux/modules/letters";
+import { __addLetter } from "../redux/modules/letters";
 
 export default function AddForm() {
   // const { setLetters } = useContext(LetterContext);

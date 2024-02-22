@@ -10,12 +10,17 @@ const initialState = {
 
 };
 
+const getLettersFromDB = async () => {
+  const { data } = await axios.get('http://localhost:4000/letters?_sort=id,-views');
+  return data;
+}
+
 export const __getLetters = createAsyncThunk(
   "getLetters",
   async (payload, thunkAPI) => {
     try {
-      const { data } = await axios.get('http://localhost:4000/letters');
-      return data;
+      const letters = await getLettersFromDB();
+      return letters;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -27,9 +32,8 @@ export const __addLetter = createAsyncThunk(
   async (newLetter, thunkAPI) => {
     try {
       await axios.post('http://localhost:4000/letters', newLetter);
-      const { data } = await axios.get('http://localhost:4000/letters');
-      console.log('data', data)
-      return data
+      const letters = await getLettersFromDB();
+      return letters
     } catch (error) {
       return thunkAPI.rejectWithValue(error); //extra reducer로 전달됌
     }

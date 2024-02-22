@@ -16,7 +16,7 @@ export default function LetterList() {
   useEffect(() => {
     //getLetters
     dispatch(__getLetters());
-  }, [])
+  }, [dispatch])
 
   return (
     <ListWrapper>
