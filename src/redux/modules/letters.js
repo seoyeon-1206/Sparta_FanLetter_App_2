@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import { jsonApi } from "api";
 
 // 새로고침시 initialState로
 const initialState = {
@@ -11,7 +11,7 @@ const initialState = {
 };
 
 const getLettersFromDB = async () => {
-  const { data } = await axios.get('http://localhost:4000/letters?_sort=id,-views');
+  const { data } = await jsonApi.get('/letters?_sort=id,-views');
   return data;
 }
 
@@ -31,7 +31,7 @@ export const __addLetter = createAsyncThunk(
   "addLetter",
   async (newLetter, thunkAPI) => {
     try {
-      await axios.post('http://localhost:4000/letters', newLetter);
+      await jsonApi.post('/letters', newLetter);
       const letters = await getLettersFromDB();
       return letters
     } catch (error) {

@@ -22,7 +22,7 @@ const Login = () => {
         event.preventDefault(); //submit이라서
         if (isLoginMode) {
             try {
-                const { data } = await authApi.post("/login", {
+                const { data } = await authApi.post("/login?expiresIn=10s", {
                     id,
                     password,
                 }
